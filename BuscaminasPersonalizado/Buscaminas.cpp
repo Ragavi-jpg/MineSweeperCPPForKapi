@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdio.h>
-#include <locale.h>
 
 using namespace std;
 
@@ -60,17 +59,17 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1])
             cout<<"Colocar bandera?(Y/N): ";
             cin>>colocarBandera;
             if(colocarBandera == 'Y' || colocarBandera == 'y'){
-                cout<<"Escoge Número de fila: ";
+                cout<<"Escoge Numero de fila: ";
                 cin>>fila;
-                cout<<"Escoge Número de columna: ";
+                cout<<"Escoge Numero de columna: ";
                 cin>>columna;
                 system("cls");
                 if(fila<0 || fila>=DIMENSIONX-2 || columna<0 || columna>=DIMENSIONY-2) hubicacionCorrecta = false;
                 if(hubicacionCorrecta) matriz[fila+1][columna+1] = 'O';
             }else{
-                cout<<"Escoge Número de fila: ";
+                cout<<"Escoge Numero de fila: ";
                 cin>>fila;
-                cout<<"Escoge Número de columna: ";
+                cout<<"Escoge Numero de columna: ";
                 cin>>columna;
                 system("cls");
                 if(fila<0 || fila>=DIMENSIONX-2 || columna<0 || columna>=DIMENSIONY-2) hubicacionCorrecta = false;
@@ -86,7 +85,7 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1])
         cout<<"[ ¡¡GANASTE!! ]"<<endl;
     }else{
         imprimir(matriz);
-        cout<<"[ PERDISTE D: ]"<<endl;
+        cout<<"[ OH NO! CAVASTE DONDE HAY UNA MINA! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<'\n'<<"Diego es gay"<<endl;
     }
 }
 
@@ -108,7 +107,6 @@ int main()
     {'C','0','1','2','3','4','5','6','7','8',b,b}
     };
 
-    setlocale(LC_ALL, "");
     jugar(tablero);
     return 0;
 }
