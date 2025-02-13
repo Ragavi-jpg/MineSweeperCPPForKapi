@@ -7,17 +7,17 @@ const int DIMENSIONX = 10;
 const int DIMENSIONY = 11;
 
 const int hubicacionBombas[DIMENSIONX][DIMENSIONY] = {
-    {0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,1,1,0},
-    {0,0,0,0,1,1,0,0,0,1,0},
-    {0,0,0,0,0,1,0,0,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0,0},
-    {0,0,0,1,0,0,0,0,0,1,0},
-    {0,0,0,0,0,0,0,0,1,1,0},
-    {0,1,0,0,0,0,0,0,0,0,0},
-    {0,1,0,0,1,0,0,1,1,1,0},
-    {0,0,0,0,0,0,0,0,0,0,0}
-};
+    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2},
+    {-2, 0, 0, 1, 2, 2, 1, 1,-1,-1,-2},
+    {-2, 0, 0, 1,-1,-1, 2, 1, 3,-1,-2},
+    {-2, 0, 0, 1, 3,-1, 2, 0, 1, 1,-2},
+    {-2, 0, 1, 1, 2, 1, 1, 0, 1, 1,-2},
+    {-2, 0, 1,-1, 1, 0, 0, 1, 3,-1,-2},
+    {-2, 1, 2, 1, 1, 0, 0, 1,-1,-1,-2},
+    {-2,-1, 2, 1, 1, 1, 1, 3, 5, 4,-2},
+    {-2,-1, 2, 1,-1, 1, 1,-1,-1,-1,-2},
+    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2}
+}; //minas = -1, Muros = -2, Casillas libres = 0
 
 
 int contarBombas()
@@ -25,7 +25,7 @@ int contarBombas()
     int n = 0;
     for(int i = 0; i<DIMENSIONX; i++){
         for(int j = 0; j<DIMENSIONY; j++){
-            if(hubicacionBombas[i][j] == 1) n++;
+            if(hubicacionBombas[i][j] == -1) n++;
         }
     }
     return n;
@@ -43,7 +43,17 @@ void imprimir(char matriz[DIMENSIONX+1][DIMENSIONY+1])
     cout<<endl;
 }
 
-void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1])
+void procesarCasillaSegura(char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
+{
+    if(hubicacionBombas[fila+1][columna+1] != 0){
+        matriz[fila+1][columna+1] = hubicacionBombas[fila+1][columna+1]+'0';
+        casillasPorLimpiar--;
+    }else{
+
+    }
+}
+
+void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1], int bombas, int& casillasPorLimpiar)
 {
     int ganarOPerder = 0; //ganar = 1, perder = -1
     int fila;
@@ -53,6 +63,7 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1])
 
     while(ganarOPerder == 0){
         do{
+            cout<<"BOMBAS: "<<bombas<<'\n'<<"CASILLAS PARA GANAR: "<<casillasPorLimpiar<<endl;
             imprimir(matriz);
             if(!hubicacionCorrecta) cout<<"Casilla incorrecta, prueba otra vez"<<'\n';
             hubicacionCorrecta = true;
@@ -75,23 +86,27 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1])
                 if(fila<0 || fila>=DIMENSIONX-2 || columna<0 || columna>=DIMENSIONY-2) hubicacionCorrecta = false;
             }
         }while(!hubicacionCorrecta);
-        if(hubicacionBombas[fila+1][columna+1] == 1 && !(colocarBandera == 'y' || colocarBandera == 'Y')){
+        if(hubicacionBombas[fila+1][columna+1] == -1 && !(colocarBandera == 'y' || colocarBandera == 'Y')){
             matriz[fila+1][columna+1] = 'X';
             ganarOPerder = -1;
+        }else{
+            if(!(colocarBandera == 'y' || colocarBandera == 'Y')) procesarCasillaSegura(matriz, casillasPorLimpiar, fila, columna);
         }
+        if(casillasPorLimpiar == 0) ganarOPerder = 1;
     }
     if(ganarOPerder == 1){
         imprimir(matriz);
-        cout<<"[ ¡¡GANASTE!! ]"<<endl;
+        cout<<"[ !!GANASTE!! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<endl;
     }else{
         imprimir(matriz);
-        cout<<"[ OH NO! CAVASTE DONDE HAY UNA MINA! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<'\n'<<"Diego es gay"<<endl;
+        cout<<"[ OH NO! CAVASTE DONDE HAY UNA MINA! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<endl;
     }
 }
 
 int main()
 {
     int nBombas = contarBombas();
+    int nCasillasPorLimpiar = (DIMENSIONX-2)*(DIMENSIONY-2) - contarBombas();
     char m = '#', e = '.', b = ' ';
     char tablero[DIMENSIONX+1][DIMENSIONY+1] = {
     {m,m,m,m,m,m,m,m,m,m,m,'F'},
@@ -107,7 +122,7 @@ int main()
     {'C','0','1','2','3','4','5','6','7','8',b,b}
     };
 
-    jugar(tablero);
+    jugar(tablero, nBombas, nCasillasPorLimpiar);
     return 0;
 }
 
