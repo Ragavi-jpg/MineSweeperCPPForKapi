@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -35,21 +36,27 @@ void imprimir(char matriz[DIMENSIONX+1][DIMENSIONY+1])
 {
     for(int i = 0; i<DIMENSIONX+1; i++){
         for(int j = 0; j<DIMENSIONY+1; j++){
-            cout<<matriz[i][j]<<' '
-            ;
+            cout<<matriz[i][j]<<' ';
         }
         cout<<'\n';
     }
     cout<<endl;
 }
 
+void calcularCasillasVacias(int aux[DIMENSIONX][DIMENSIONY], char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
+{
+
+}
+
 void procesarCasillaSegura(char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
 {
+    int tableroAux[DIMENSIONX][DIMENSIONY];
+    copy(&hubicacionBombas[0][0], &hubicacionBombas[0][0]+DIMENSIONX*DIMENSIONY, &tableroAux[0][0]);
     if(hubicacionBombas[fila+1][columna+1] != 0){
         matriz[fila+1][columna+1] = hubicacionBombas[fila+1][columna+1]+'0';
         casillasPorLimpiar--;
     }else{
-
+        calcularCasillasVacias(tableroAux,matriz,casillasPorLimpiar,fila+1,columna+1);
     }
 }
 
