@@ -43,20 +43,44 @@ void imprimir(char matriz[DIMENSIONX+1][DIMENSIONY+1])
     cout<<endl;
 }
 
-void calcularCasillasVacias(int aux[DIMENSIONX][DIMENSIONY], char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
+void calcularCasillasVacias(char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
 {
-
+    if(matriz[fila][columna] == '.' || matriz[fila][columna] == 'P'){
+        if(hubicacionBombas[fila][columna] == 0){
+            casillasPorLimpiar--;
+            matriz[fila][columna] = ' ';
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila-1,columna-1);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila-1,columna);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila-1,columna+1);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila,columna-1);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila,columna+1);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila+1,columna-1);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila+1,columna);
+            calcularCasillasVacias(matriz, casillasPorLimpiar, fila+1,columna+1);
+        }else{
+            casillasPorLimpiar--;
+            matriz[fila][columna] = hubicacionBombas[fila][columna]+'0';
+        }
+    }
+    return;
 }
 
 void procesarCasillaSegura(char matriz[DIMENSIONX+1][DIMENSIONY+1], int& casillasPorLimpiar, int fila, int columna)
 {
-    int tableroAux[DIMENSIONX][DIMENSIONY];
-    copy(&hubicacionBombas[0][0], &hubicacionBombas[0][0]+DIMENSIONX*DIMENSIONY, &tableroAux[0][0]);
     if(hubicacionBombas[fila+1][columna+1] != 0){
         matriz[fila+1][columna+1] = hubicacionBombas[fila+1][columna+1]+'0';
         casillasPorLimpiar--;
     }else{
-        calcularCasillasVacias(tableroAux,matriz,casillasPorLimpiar,fila+1,columna+1);
+        calcularCasillasVacias(matriz,casillasPorLimpiar,fila+1,columna+1);
+    }
+}
+
+void alterarMatriz(char matriz[DIMENSIONX+1][DIMENSIONY+1]){
+    for(int i = 0; i<DIMENSIONX; i++){
+        for(int j = 0; j<DIMENSIONY; j++){
+            if(hubicacionBombas[i][j] != -2) matriz[i][j] = ' ';
+            if(hubicacionBombas[i][j] == -1) matriz[i][j] = 'P';
+        }
     }
 }
 
@@ -82,8 +106,8 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1], int bombas, int& casillasPor
                 cout<<"Escoge Numero de columna: ";
                 cin>>columna;
                 system("cls");
-                if(fila<0 || fila>=DIMENSIONX-2 || columna<0 || columna>=DIMENSIONY-2) hubicacionCorrecta = false;
-                if(hubicacionCorrecta) matriz[fila+1][columna+1] = 'O';
+                if(fila<0 || fila>=DIMENSIONX-2 || columna<0 || columna>=DIMENSIONY-2 || matriz[fila+1][columna+1] != '.') hubicacionCorrecta = false;
+                if(hubicacionCorrecta) matriz[fila+1][columna+1] = 'P';
             }else{
                 cout<<"Escoge Numero de fila: ";
                 cin>>fila;
@@ -102,6 +126,7 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1], int bombas, int& casillasPor
         if(casillasPorLimpiar == 0) ganarOPerder = 1;
     }
     if(ganarOPerder == 1){
+        alterarMatriz(matriz);
         imprimir(matriz);
         cout<<"[ !!GANASTE!! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<endl;
     }else{
