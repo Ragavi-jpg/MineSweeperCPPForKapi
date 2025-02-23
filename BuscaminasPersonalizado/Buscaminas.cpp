@@ -1,24 +1,26 @@
 #include <iostream>
 #include <stdio.h>
-#include <algorithm>
+#include <cstdio>
+
 
 using namespace std;
 
-const int DIMENSIONX = 11;
-const int DIMENSIONY = 19;
+const int DIMENSIONX = 12;
+const int DIMENSIONY = 12;
 
 const int hubicacionBombas[DIMENSIONX][DIMENSIONY] = {
-    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2},
-    {-2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-2},
-    {-2, 0, 1, 2, 3, 2, 1, 0, 0, 0, 0, 0, 1, 1, 2, 1, 1, 0,-2},
-    {-2, 0, 1,-1,-1,-1, 1, 1, 1, 2, 1, 1, 2,-1, 4,-1, 2, 0,-2},
-    {-2, 0, 1, 4,-1, 4, 1, 2,-1, 5,-1, 2, 3,-1, 6,-1, 3, 0,-2},
-    {-2, 0, 0, 3,-1, 3, 0, 2,-1,-1,-1, 2, 3,-1, 6,-1, 3, 0,-2},
-    {-2, 0, 1, 4,-1, 4, 1, 1, 3,-1, 3, 1, 3,-1, 7,-1, 3, 0,-2},
-    {-2, 0, 1,-1,-1,-1, 1, 0, 1, 1, 1, 0, 2,-1,-1,-1, 2, 0,-2},
-    {-2, 0, 1, 2, 3, 2, 1, 0, 0, 0, 0, 0, 1, 2, 3, 2, 1, 0,-2},
-    {-2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-2},
-    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2}
+    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2},
+    {-2, 0, 0, 0, 0, 1,-1, 1, 0, 0, 0,-2},
+    {-2, 0, 0, 1, 1, 2, 1, 1, 0, 1, 1,-2},
+    {-2, 0, 0, 1,-1, 1, 0, 0, 0, 2,-1,-2},
+    {-2, 0, 0, 1, 1, 1, 0, 0, 0, 3,-1,-2},
+    {-2, 1, 1, 1, 0, 0, 0, 0, 0, 2,-1,-2},
+    {-2, 2,-1, 1, 0, 0, 0, 0, 0, 1, 1,-2},
+    {-2,-1, 3, 1, 0, 0, 0, 0, 0, 0, 0,-2},
+    {-2,-1, 2, 0, 0, 1, 1, 1, 0, 0, 0,-2},
+    {-2, 1, 1, 0, 0, 1,-1, 2, 1, 0, 0,-2},
+    {-2, 0, 0, 0, 0, 1, 2,-1, 1, 0, 0,-2},
+    {-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2,-2}
 }; //minas = -1, Muros = -2, Casillas libres = 0
 
 
@@ -129,7 +131,7 @@ void jugar(char matriz[DIMENSIONX+1][DIMENSIONY+1], int bombas, int& casillasPor
     if(ganarOPerder == 1){
         alterarMatriz(matriz);
         imprimir(matriz);
-        cout<<"[ !!GANASTE!! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<endl;
+        cout<<"[ !!GANASTE!! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<'\n'<<'\n'<<"LA PISTA ES: [OBJECTIVE-C]"<<'\n'<<endl;
     }else{
         imprimir(matriz);
         cout<<"[ OH NO! CAVASTE DONDE HAY UNA MINA! ]"<<'\n'<<'\n'<<"  - GAME OVER -"<<endl;
@@ -142,21 +144,23 @@ int main()
     int nCasillasPorLimpiar = (DIMENSIONX-2)*(DIMENSIONY-2) - contarBombas();
     char m = '#', e = '.', b = ' ';
     char tablero[DIMENSIONX+1][DIMENSIONY+1] = {
-    { m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m ,'F'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'0'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'1'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'2'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'3'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'4'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'5'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'6'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'7'},
-    { m , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , e , m ,'8'},
-    { m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , m , b },
-    {'C','0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5','6', b , b }
+    { m , m , m , m , m , m , m , m , m , m , m , m ,'F'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'0'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'1'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'2'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'3'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'4'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'5'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'6'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'7'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'8'},
+    { m , e , e , e , e , e , e , e , e , e , e , m ,'9'},
+    { m , m , m , m , m , m , m , m , m , m , m , m , b },
+    {'C','0','1','2','3','4','5','6','7','8','9', b , b }
     };
 
     jugar(tablero, nBombas, nCasillasPorLimpiar);
+    system("pause");
     return 0;
 }
 
